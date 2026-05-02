@@ -3,9 +3,11 @@ import { App } from '../../../src/app';
 import { IUser } from '../../../src/interfaces/IUser';
 import { IUserResponse } from '../../../src/interfaces/IUserResponse';
 import { UserRepository } from '../../../src/endpoints/users/userRepository';
+import usersJson from '../../../src/endpoints/users/users.json';
 
 // Cria uma instância da aplicação para executar os testes
 const app = new App().server;
+const mockUsers = usersJson as IUser[];
 
 describe('UserController', () => {
   afterEach(() => {
@@ -15,44 +17,10 @@ describe('UserController', () => {
   it('Deve retornar a lista de usuários corretamente', async () => {
     console.log('Testando GET /users - listagem de usuários');
 
-    const mockUsers: IUser[] = [
-      {
-        id: 1,
-        name: 'Naruto',
-        age: 10,
-      },
-      {
-        id: 2,
-        name: 'Sasuke',
-        age: 18,
-      },
-      {
-        id: 3,
-        name: 'Kakashi',
-        age: 50,
-      },
-    ];
-
-    const expectedUsers: IUserResponse[] = [
-      {
-        id: 1,
-        name: 'Naruto',
-        age: 10,
-        isOfAge: false,
-      },
-      {
-        id: 2,
-        name: 'Sasuke',
-        age: 18,
-        isOfAge: true,
-      },
-      {
-        id: 3,
-        name: 'Kakashi',
-        age: 50,
-        isOfAge: true,
-      },
-    ];
+    const expectedUsers: IUserResponse[] = mockUsers.map((user) => ({
+      ...user,
+      isOfAge: user.age >= 18,
+    }));
 
     jest.spyOn(UserRepository.prototype, 'list').mockReturnValueOnce(mockUsers);
 
@@ -65,15 +33,11 @@ describe('UserController', () => {
   it('Deve retornar um usuário específico corretamente', async () => {
     console.log('Testando GET /users/:id - visualização de usuário');
 
-    const mockUser: IUser = {
-      id: 1,
-      name: 'Naruto',
-      age: 10,
-    };
+    const mockUser = mockUsers[0];
 
     const expectedUser: IUserResponse = {
       ...mockUser,
-      isOfAge: false,
+      isOfAge: mockUser.age >= 18,
     };
 
     const findOneSpy = jest.spyOn(UserRepository.prototype, 'findOne').mockReturnValueOnce(mockUser);
@@ -90,7 +54,7 @@ describe('UserController', () => {
     console.log('Testando POST /users - criação de usuário');
 
     const mockUser: IUser = {
-      id: 4,
+      id: 7,
       name: 'Sakura',
       age: 18,
     };
