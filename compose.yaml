@@ -9,3 +9,13 @@ services:
     volumes:
       - ./:/app # Mapeia o código-fonte
       - /app/node_modules # Isola node_modules no container
+
+  test:
+    build:
+      context: .
+    environment:
+      NODE_ENV: test
+    command: npm test
+    volumes:
+      - ./:/app # Mapeia o código-fonte
+      - /app/node_modules # Isola node_modules no container
