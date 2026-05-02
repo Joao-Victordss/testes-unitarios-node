@@ -13,6 +13,8 @@ describe('UserController', () => {
   });
 
   it('Deve retornar a lista de usuários corretamente', async () => {
+    console.log('Testando GET /users - listagem de usuários');
+
     const mockUsers: IUser[] = [
       {
         id: 1,
@@ -61,6 +63,8 @@ describe('UserController', () => {
   });
 
   it('Deve retornar um usuário específico corretamente', async () => {
+    console.log('Testando GET /users/:id - visualização de usuário');
+
     const mockUser: IUser = {
       id: 1,
       name: 'Naruto',
@@ -83,6 +87,8 @@ describe('UserController', () => {
   });
 
   it('Deve criar um usuário corretamente', async () => {
+    console.log('Testando POST /users - criação de usuário');
+
     const mockUser: IUser = {
       id: 4,
       name: 'Sakura',
@@ -102,6 +108,8 @@ describe('UserController', () => {
   });
 
   it('Deve excluir um usuário corretamente', async () => {
+    console.log('Testando DELETE /users/:id - exclusão de usuário');
+
     const deleteSpy = jest.spyOn(UserRepository.prototype, 'delete').mockReturnValueOnce(true);
 
     const response = await request(app).delete('/users/1');
